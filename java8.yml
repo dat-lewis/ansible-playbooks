@@ -1,0 +1,25 @@
+---
+- hosts: java
+  user: root
+
+  tasks:
+
+    - name: check if required packages are installed
+      action: apt name={{ item }} state=latest update_cache=yes
+      with_items:
+        - python-software-properties
+
+    - name: add java repository to sources.list
+      action: apt_repository repo='deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main' state=present
+
+    - name: accept license for java
+      action: shell echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
+
+    - name: apt update
+      action: apt update_cache=yes
+
+    - name: apt install
+      action: apt pkg=oracle-java8-installer state=latest install_recommends=yes force=yes
+
+    - name: set env
+      action: apt pkg=oracle-java8-set-default state=latest install_recommends=yes force=yes

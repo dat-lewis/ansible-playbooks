@@ -1,0 +1,11 @@
+---
+- hosts: debian
+  user: root
+
+  tasks:
+
+    - name: apt update
+      action: apt update_cache=yes
+
+    - name: apt install
+      action: apt upgrade=dist force=yes
